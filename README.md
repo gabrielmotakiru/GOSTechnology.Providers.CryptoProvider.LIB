@@ -5,7 +5,7 @@
 [![N|Solid](https://img.icons8.com/dusk/2x/security-aes.png)](https://github.com/gabrielmotakiru/GOSTechnology.Providers.CryptoProvider.LIB)
 
 #### *View Client: [Encrypt & Decrypt](https://gabrielmotakiru.github.io/GOSTechnology.Providers.CryptoProvider.LIB/index.html)*
-###### Client to use crypto AES 128 bits in JavaScript for encapsulating data (connection strings, communication between front/back end).
+###### Client to configure connection strings, and test communication between front end / back end.
 
 ---
 
