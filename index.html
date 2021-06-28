@@ -1,0 +1,99 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script>
+        function encrypt() {
+            try {                
+                var key = CryptoJS.enc.Utf8.parse(document.getElementById('key').value);
+                var iv = CryptoJS.enc.Utf8.parse(document.getElementById('iv').value);
+                var text = document.getElementById('textToEncrypt').value;
+ 
+                var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(text), key,
+                                {
+                                    keySize: 128 / 8,
+                                    iv: iv,
+                                    mode: CryptoJS.mode.CBC,
+                                    padding: CryptoJS.pad.Pkcs7
+                                });
+
+                document.getElementById('result').value = encrypted.toString();
+            } catch (exception) {
+                console.log(exception);
+            }
+        }
+
+        function decrypt() {
+            try {
+                
+                var key = CryptoJS.enc.Utf8.parse(document.getElementById('key').value);
+                var iv = CryptoJS.enc.Utf8.parse(document.getElementById('iv').value);
+                var text = document.getElementById('textToDecrypt').value;
+
+                var decrypted = CryptoJS.AES.decrypt(text, key,
+                                {
+                                    keySize: 128 / 8,
+                                    iv: iv,
+                                    mode: CryptoJS.mode.CBC,
+                                    padding: CryptoJS.pad.Pkcs7
+                                })
+                                .toString(CryptoJS.enc.Utf8);
+
+                document.getElementById('result').value = decrypted.toString();
+            } catch (exception) {
+                console.log(exception);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <br /><br />
+
+        <div class="form-group col col-md-12 text-center">
+            <h1><a href="https://github.com/gabrielmotakiru/GOSTechnology.Providers.CryptoProvider.LIB" target="_blank">GOSTechnology.Providers.CryptoProvider.LIB</a></h1>
+            <h5>Client to use crypto AES 128 bits of library in JavaScript for encapsulating data (connection strings, front end / back end).</h5>
+        </div>
+
+        <br /><br /><br /><br /><br /><br /><br /><br />
+
+        <div class="form-group col col-md-6 col-sm-12">
+            <input id="key" type="text" class="form-control" placeholder="Key..." />
+        </div>
+        
+        <div class="form-group col col-md-6 col-sm-12">
+            <input id="iv" type="text" class="form-control" placeholder="IV..." />
+        </div>
+        
+        <div class="form-group col col-md-6 col-sm-12">
+            <input id="textToEncrypt" type="text" class="form-control" placeholder="Text to encrypt..." />
+        </div>
+        
+        <div class="form-group col col-md-6 col-sm-12">
+            <input id="textToDecrypt" type="text" class="form-control" placeholder="Text to decrypt..." />
+        </div>
+        
+        <div class="form-group col col-md-6 col-sm-6"> 
+            <input type="button" value="Encrypt" onclick="encrypt();" class="btn btn-primary">
+        </div>
+
+        <div class="form-group col col-md-6 col-sm-6"> 
+            <input type="button" value="Decrypt" onclick="decrypt();" class="btn btn-primary">
+        </div>
+
+        <div class="form-group col col-md-12 col-sm-12"> 
+            <textarea id="result" type="text" class="form-control" placeholder="Result..." rows="6"></textarea>
+        </div>
+    </div>
+   
+    <footer class="text-center text-lg-start bg-light text-muted">
+        <br /><br />
+        <div class="text-center p-4" >
+          © 2021 Copyright:
+          <a class="text-reset fw-bold" href="https://github.com/gabrielmotakiru/" target="_blank">Gabriel Motakiru (Gabriel O. Souza)</a>
+        </div>
+    </footer>
+</body>
+</html>
