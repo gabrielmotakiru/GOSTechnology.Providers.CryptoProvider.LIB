@@ -166,7 +166,7 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         }
 
         /// <summary>
-        /// ShouldSuccessDecryptAES.
+        /// ShouldSuccessEncryptDecryptAES.
         /// </summary>
         /// <param name="cipherText"></param>
         /// <param name="key"></param>

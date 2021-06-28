@@ -87,12 +87,15 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
             {
                 using (var rijndaelManaged = new RijndaelManaged())
                 {
-                    rijndaelManaged.Padding = PaddingMode.PKCS7;
                     rijndaelManaged.Mode = CipherMode.CBC;
+                    rijndaelManaged.Padding = PaddingMode.PKCS7;
+                    rijndaelManaged.FeedbackSize = 128;
                     rijndaelManaged.KeySize = 128;
                     rijndaelManaged.BlockSize = 128;
+                    rijndaelManaged.Key = key;
+                    rijndaelManaged.IV = iv;
 
-                    ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(key, iv);
+                    ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV);
 
                     using (var memoryStream = new MemoryStream())
                     {
@@ -132,6 +135,8 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
                     rijndaelManaged.Mode = CipherMode.CBC;
                     rijndaelManaged.Padding = PaddingMode.PKCS7;
                     rijndaelManaged.FeedbackSize = 128;
+                    rijndaelManaged.KeySize = 128;
+                    rijndaelManaged.BlockSize = 128;
                     rijndaelManaged.Key = key;
                     rijndaelManaged.IV = iv;
 

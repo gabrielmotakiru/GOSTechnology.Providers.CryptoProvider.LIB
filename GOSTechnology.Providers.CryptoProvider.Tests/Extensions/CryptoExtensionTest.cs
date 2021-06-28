@@ -54,7 +54,7 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         [Test]
         [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         [TestCase(ConstantsCryptoProvider.TEST_2_CRYPTO, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
         public void ShouldFailDecryptAES(String cipherText, String key, String iv)
         {
             var decrypt = CryptoExtension.DecryptAES(cipherText, key, iv);
@@ -78,7 +78,7 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         }
 
         /// <summary>
-        /// ShouldSuccessDecryptAES.
+        /// ShouldSuccessEncryptDecryptAES.
         /// </summary>
         /// <param name="cipherText"></param>
         /// <param name="key"></param>
