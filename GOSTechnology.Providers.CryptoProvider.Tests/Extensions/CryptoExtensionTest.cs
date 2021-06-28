@@ -20,9 +20,9 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase("", "1234567890123456", "1234567890123456")]
-        [TestCase("Teste 2", "", "1234567890123456")]
-        [TestCase("Teste 3", "1234567890123456", "")]
+        [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
         public void ShouldFailEncryptAES(String text, String key, String iv)
         {
             var encrypt = CryptoExtension.EncryptAES(text, key, iv);
@@ -36,9 +36,9 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase("Teste 1", "1234567890123456", "1234567890123456")]
-        [TestCase("Teste 2", "1234567890123456", "1234567890123456")]
-        [TestCase("Teste 3", "1234567890123456", "1234567890123456")]
+        [TestCase(ConstantsCryptoProvider.TEST_1, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         public void ShouldSuccessEncryptAES(String text, String key, String iv)
         {
             var encrypt = CryptoExtension.EncryptAES(text, key, iv);
@@ -52,9 +52,9 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase("", "1234567890123456", "1234567890123456")]
-        [TestCase("2Df7wrrt+5s5omedkhAm5Q==", "", "1234567890123456")]
-        [TestCase("dbGSj2ze9LiOjkWH1EXq9Q==", "1234567890123456", "")]
+        [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_2_CRYPTO, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         public void ShouldFailDecryptAES(String cipherText, String key, String iv)
         {
             var decrypt = CryptoExtension.DecryptAES(cipherText, key, iv);
@@ -68,9 +68,9 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase("3DwRxK7jYU4o13/ySZKL2w==", "1234567890123456", "1234567890123456")]
-        [TestCase("2Df7wrrt+5s5omedkhAm5Q==", "1234567890123456", "1234567890123456")]
-        [TestCase("dbGSj2ze9LiOjkWH1EXq9Q==", "1234567890123456", "1234567890123456")]
+        [TestCase(ConstantsCryptoProvider.TEST_1_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_2_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         public void ShouldSuccessDecryptAES(String cipherText, String key, String iv)
         {
             var decrypt = CryptoExtension.DecryptAES(cipherText, key, iv);
@@ -84,9 +84,9 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase("Teste 1", "1234567890123456", "1234567890123456")]
-        [TestCase("Teste 2", "1234567890123456", "1234567890123456")]
-        [TestCase("Teste 3", "1234567890123456", "1234567890123456")]
+        [TestCase(ConstantsCryptoProvider.TEST_1, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         public void ShouldSuccessEncryptDecryptAES(String text, String key, String iv)
         {
             var encrypt = CryptoExtension.EncryptAES(text, key, iv);
