@@ -22,21 +22,11 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
         {
             String result = default(String);
 
-            try
-            {
-                if (!String.IsNullOrWhiteSpace(text) && !String.IsNullOrWhiteSpace(key) && !String.IsNullOrWhiteSpace(iv))
-                {
-                    Byte[] keyBytes = Encoding.UTF8.GetBytes(key);
-                    Byte[] ivBytes = Encoding.UTF8.GetBytes(iv);
-                    Byte[] toEncrypt = Encoding.ASCII.GetBytes(text);
+            Byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            Byte[] ivBytes = Encoding.UTF8.GetBytes(iv);
+            Byte[] toEncrypt = Encoding.ASCII.GetBytes(text);
 
-                    result = EncryptAESFromBytes(toEncrypt, keyBytes, ivBytes);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex?.ToString());
-            }
+            result = EncryptAESFromBytes(toEncrypt, keyBytes, ivBytes);
 
             return result;
         }
@@ -52,22 +42,11 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
         {
             String result = default(String);
 
-            try
-            {
-                if (!String.IsNullOrWhiteSpace(cipherText) && !String.IsNullOrWhiteSpace(key) && !String.IsNullOrWhiteSpace(iv))
-                {
-                    Byte[] keyBytes = Encoding.UTF8.GetBytes(key);
-                    Byte[] ivBytes = Encoding.UTF8.GetBytes(iv);
-                    Byte[] toDecrypt = Convert.FromBase64String(cipherText);
+            Byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            Byte[] ivBytes = Encoding.UTF8.GetBytes(iv);
+            Byte[] toDecrypt = Convert.FromBase64String(cipherText);
 
-                    result = DecryptAESFromBytes(toDecrypt, keyBytes, ivBytes);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex?.ToString());
-                throw ex;
-            }
+            result = DecryptAESFromBytes(toDecrypt, keyBytes, ivBytes);
 
             return result;
         }
@@ -83,36 +62,28 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
         {
             String result = default(String);
 
-            try
+            using (var rijndaelManaged = new RijndaelManaged())
             {
-                using (var rijndaelManaged = new RijndaelManaged())
+                rijndaelManaged.Mode = CipherMode.CBC;
+                rijndaelManaged.Padding = PaddingMode.PKCS7;
+                rijndaelManaged.FeedbackSize = 128;
+                rijndaelManaged.KeySize = 256;
+                rijndaelManaged.BlockSize = 128;
+                rijndaelManaged.Key = key;
+                rijndaelManaged.IV = iv;
+
+                ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV);
+
+                using (var memoryStream = new MemoryStream())
                 {
-                    rijndaelManaged.Mode = CipherMode.CBC;
-                    rijndaelManaged.Padding = PaddingMode.PKCS7;
-                    rijndaelManaged.FeedbackSize = 128;
-                    rijndaelManaged.KeySize = 128;
-                    rijndaelManaged.BlockSize = 128;
-                    rijndaelManaged.Key = key;
-                    rijndaelManaged.IV = iv;
-
-                    ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV);
-
-                    using (var memoryStream = new MemoryStream())
+                    using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
                     {
-                        using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                        {
-                            cryptoStream.Write(text, 0, text.Length);
-                            cryptoStream.FlushFinalBlock();
-                            result = (Convert.ToBase64String(memoryStream.ToArray()));
-                        }
+                        cryptoStream.Write(text, 0, text.Length);
+                        cryptoStream.FlushFinalBlock();
+                        result = (Convert.ToBase64String(memoryStream.ToArray()));
                     }
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex?.ToString());
-                throw ex;
-            }
+                }
+            };
 
             return result;
         }
@@ -128,36 +99,28 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
         {
             String result = null;
 
-            try
+            using (var rijndaelManaged = new RijndaelManaged())
             {
-                using (var rijndaelManaged = new RijndaelManaged())
+                rijndaelManaged.Mode = CipherMode.CBC;
+                rijndaelManaged.Padding = PaddingMode.PKCS7;
+                rijndaelManaged.FeedbackSize = 128;
+                rijndaelManaged.KeySize = 256;
+                rijndaelManaged.BlockSize = 128;
+                rijndaelManaged.Key = key;
+                rijndaelManaged.IV = iv;
+
+                ICryptoTransform decryptor = rijndaelManaged.CreateDecryptor(rijndaelManaged.Key, rijndaelManaged.IV);
+
+                using (var memoryStream = new MemoryStream(cipherText))
                 {
-                    rijndaelManaged.Mode = CipherMode.CBC;
-                    rijndaelManaged.Padding = PaddingMode.PKCS7;
-                    rijndaelManaged.FeedbackSize = 128;
-                    rijndaelManaged.KeySize = 128;
-                    rijndaelManaged.BlockSize = 128;
-                    rijndaelManaged.Key = key;
-                    rijndaelManaged.IV = iv;
-
-                    ICryptoTransform decryptor = rijndaelManaged.CreateDecryptor(rijndaelManaged.Key, rijndaelManaged.IV);
-
-                    using (var memoryStream = new MemoryStream(cipherText))
-                    { 
-                        using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                    using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (var streamReader = new StreamReader(cryptoStream))
                         {
-                            using (var streamReader = new StreamReader(cryptoStream))
-                            {
-                                result = streamReader.ReadToEnd();
-                            }
+                            result = streamReader.ReadToEnd();
                         }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex?.ToString());
-                throw ex;
             }
 
             return result;

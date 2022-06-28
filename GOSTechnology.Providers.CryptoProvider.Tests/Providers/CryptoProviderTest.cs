@@ -14,28 +14,7 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
     [TestFixture]
     public class CryptoProviderTest
     {
-        #region "CONFIGURATION"
-
-        /// <summary>
-        /// _logger.
-        /// </summary>
-        private Mock<ILogger<LIB.CryptoProvider>> _logger;
-
-        /// <summary>
-        /// _cryptoProvider.
-        /// </summary>
-        private ICryptoProvider _cryptoProvider;
-
-        [SetUp]
-        public void SetUp()
-        {
-            this._logger = new Mock<ILogger<LIB.CryptoProvider>>();
-            this._cryptoProvider = new LIB.CryptoProvider(this._logger.Object);
-        }
-
-        #endregion
-
-        #region "TESTS"
+        #region "ENCRYPT TESTS"
 
         /// <summary>
         /// ShouldFailEncryptAES.
@@ -49,24 +28,78 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
         public void ShouldFailEncryptAES(String text, String key, String iv)
         {
-            var encrypt = this._cryptoProvider.EncryptAES(text, key, iv);
-            encrypt.Should().BeNullOrWhiteSpace();
+            Action comparison = () => LIB.CryptoProvider.EncryptAES(text, key, iv);
+            comparison.Should().Throw<Exception>();
         }
 
         /// <summary>
-        /// ShouldFailEncryptAESAsync.
+        /// ShouldFailEncryptAESWithTextArgumentNull.
         /// </summary>
         /// <param name="text"></param>
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
         [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
-        public async Task ShouldFailEncryptAESAsync(String text, String key, String iv)
+        public void ShouldFailEncryptAESWithTextArgumentNull(String text, String key, String iv)
         {
-            var encrypt = await this._cryptoProvider.EncryptAESAsync(text, key, iv);
-            encrypt.Should().BeNullOrWhiteSpace();
+            Action comparison = () => LIB.CryptoProvider.EncryptAES(text, key, iv);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_TEXT_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_TEXT)}");
+        }
+
+        /// <summary>
+        /// ShouldFailEncryptAESWithKeyArgumentNull.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
+        public void ShouldFailEncryptAESWithKeyArgumentNull(String text, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.EncryptAES(text, key, iv);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_KEY)}");
+        }
+
+        /// <summary>
+        /// ShouldFailEncryptAESWithIVArgumentNull.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
+        public void ShouldFailEncryptAESWithIVArgumentNull(String text, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.EncryptAES(text, key, iv);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_IV)}");
+        }
+
+        /// <summary>
+        /// ShouldFailEncryptAESWithKeyArgumentOutOfRange.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT_OUT_OF_RANGE, ConstantsCryptoProvider.IV_DEFAULT)]
+        public void ShouldFailEncryptAESWithKeyArgumentOutOfRange(String text, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.EncryptAES(text, key, iv);
+            comparison.Should().Throw<ArgumentOutOfRangeException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_OUT_OF_RANGE}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_KEY)}");
+        }
+
+        /// <summary>
+        /// ShouldFailEncryptAESWithIVArgumentOutOfRange.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT_OUT_OF_RANGE)]
+        public void ShouldFailEncryptAESWithKIVArgumentOutOfRange(String text, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.EncryptAES(text, key, iv);
+            comparison.Should().Throw<ArgumentOutOfRangeException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_OUT_OF_RANGE}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_IV)}");
         }
 
         /// <summary>
@@ -81,25 +114,13 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         public void ShouldSuccessEncryptAES(String text, String key, String iv)
         {
-            var encrypt = this._cryptoProvider.EncryptAES(text, key, iv);
+            var encrypt = LIB.CryptoProvider.EncryptAES(text, key, iv);
             encrypt.Should().NotBeNullOrWhiteSpace();
         }
 
-        /// <summary>
-        /// ShouldSuccessEncryptAESAsync.
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
-        [Test]
-        [TestCase(ConstantsCryptoProvider.TEST_1, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        public async Task ShouldSuccessEncryptAESAsync(String text, String key, String iv)
-        {
-            var encrypt = await this._cryptoProvider.EncryptAESAsync(text, key, iv);
-            encrypt.Should().NotBeNullOrWhiteSpace();
-        }
+        #endregion
+
+        #region "DECRYPT TESTS"
 
         /// <summary>
         /// ShouldFailDecryptAES.
@@ -113,24 +134,78 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
         public void ShouldFailDecryptAES(String cipherText, String key, String iv)
         {
-            var decrypt = this._cryptoProvider.DecryptAES(cipherText, key, iv);
-            decrypt.Should().BeNullOrWhiteSpace();
+            Action comparison = () => LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<Exception>();
         }
 
         /// <summary>
-        /// ShouldFailDecryptAESAsync.
+        /// ShouldFailDecryptAESWithTextArgumentNull.
         /// </summary>
         /// <param name="cipherText"></param>
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
         [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_2_CRYPTO, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
-        public async Task ShouldFailDecryptAESAsync(String cipherText, String key, String iv)
+        public void ShouldFailDecryptAESWithTextArgumentNull(String cipherText, String key, String iv)
         {
-            var decrypt = await this._cryptoProvider.DecryptAESAsync(cipherText, key, iv);
-            decrypt.Should().BeNullOrWhiteSpace();
+            Action comparison = () => LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_CIPHER_TEXT_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_CIPHER_TEXT)}");
+        }
+
+        /// <summary>
+        /// ShouldFailDecryptAESWithKeyArgumentNull.
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
+        public void ShouldFailDecryptAESWithKeyArgumentNull(String cipherText, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_KEY)}");
+        }
+
+        /// <summary>
+        /// ShouldFailDecryptAESWithIVArgumentNull.
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
+        public void ShouldFailDecryptAESWithIVArgumentNull(String cipherText, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_IV)}");
+        }
+
+        /// <summary>
+        /// ShouldFailDecryptAESWithKeyArgumentOutOfRange.
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT_OUT_OF_RANGE, ConstantsCryptoProvider.IV_DEFAULT)]
+        public void ShouldFailDecryptAESWithKeyArgumentOutOfRange(String cipherText, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<ArgumentOutOfRangeException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_OUT_OF_RANGE}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_KEY)}");
+        }
+
+        /// <summary>
+        /// ShouldFailDecryptAESWithIVArgumentOutOfRange.
+        /// </summary>
+        /// <param name="cipherText"></param>
+        /// <param name="key"></param>
+        /// <param name="iv"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT_OUT_OF_RANGE)]
+        public void ShouldFailDecryptAESWithKIVArgumentOutOfRange(String cipherText, String key, String iv)
+        {
+            Action comparison = () => LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<ArgumentOutOfRangeException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_OUT_OF_RANGE}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_IV)}");
         }
 
         /// <summary>
@@ -145,58 +220,64 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         public void ShouldSuccessDecryptAES(String cipherText, String key, String iv)
         {
-            var decrypt = this._cryptoProvider.DecryptAES(cipherText, key, iv);
+            var decrypt = LIB.CryptoProvider.DecryptAES(cipherText, key, iv);
             decrypt.Should().NotBeNullOrWhiteSpace();
         }
 
+        #endregion
+
+        #region "SET PASSWORD TESTS"
+
         /// <summary>
-        /// ShouldSuccessDecryptAESAsync.
+        /// ShouldFailSetPasswordWithPasswordArgumentNull.
         /// </summary>
-        /// <param name="cipherText"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
+        /// <param name="password"></param>
         [Test]
-        [TestCase(ConstantsCryptoProvider.TEST_1_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_2_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        public async Task ShouldSuccessDecryptAESAsync(String cipherText, String key, String iv)
+        [TestCase(ConstantsCryptoProvider.EMPTY)]
+        public void ShouldFailSetPasswordWithPasswordArgumentNull(String password)
         {
-            var decrypt = await this._cryptoProvider.DecryptAESAsync(cipherText, key, iv);
-            decrypt.Should().NotBeNullOrWhiteSpace();
+            Action comparison = () => LIB.CryptoProvider.SetPasswordHash(password);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_PASSWORD_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_PASSWORD)}");
         }
 
         /// <summary>
-        /// ShouldSuccessEncryptDecryptAES.
+        /// ShouldSuccessEncryptAES.
         /// </summary>
-        /// <param name="cipherText"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
+        /// <param name="password"></param>
         [Test]
-        [TestCase(ConstantsCryptoProvider.TEST_1, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        public void ShouldSuccessEncryptDecryptAES(String text, String key, String iv)
+        [TestCase(ConstantsCryptoProvider.TEST_PASSWORD)]
+        public void ShouldSuccessSetPassword(String password)
         {
-            var encrypt = this._cryptoProvider.EncryptAES(text, key, iv);
-            var decrypt = this._cryptoProvider.DecryptAES(encrypt, key, iv);
-            decrypt.Should().Be(text);
+            var encrypt = LIB.CryptoProvider.SetPasswordHash(password);
+            encrypt.Should().NotBeNullOrWhiteSpace();
+        }
+
+        #endregion
+
+        #region "GET PASSWORD TESTS"
+
+        /// <summary>
+        /// ShouldFailGetPasswordWithCipherPasswordArgumentNull.
+        /// </summary>
+        /// <param name="cipherPassword"></param>
+        [Test]
+        [TestCase(ConstantsCryptoProvider.EMPTY)]
+        public void ShouldFailGetPasswordWithCipherPasswordArgumentNull(String cipherPassword) 
+        {
+            Action comparison = () => LIB.CryptoProvider.GetPasswordHash(cipherPassword);
+            comparison.Should().Throw<ArgumentNullException>().WithMessage($"{ConstantsCryptoProvider.MESSAGE_CIPHER_PASSWORD_ARGUMENT_NULL}{String.Format(ConstantsCryptoProvider.MESSAGE_PARAMETER_X, ConstantsCryptoProvider.PARAM_CIPHER_PASSWORD)}");
         }
 
         /// <summary>
-        /// ShouldSuccessEncryptDecryptAESAsync.
+        /// ShouldSuccessGetPassword.
         /// </summary>
-        /// <param name="cipherText"></param>
-        /// <param name="key"></param>
-        /// <param name="iv"></param>
+        /// <param name="cipherPassword"></param>
         [Test]
-        [TestCase(ConstantsCryptoProvider.TEST_1, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
-        public async Task ShouldSuccessEncryptDecryptAESAsync(String text, String key, String iv)
+        [TestCase(ConstantsCryptoProvider.TEST_CIPHER_PASSWORD)]
+        public void ShouldSuccessGetPassword(String cipherPassword)
         {
-            var encrypt = await this._cryptoProvider.EncryptAESAsync(text, key, iv);
-            var decrypt = await this._cryptoProvider.DecryptAESAsync(encrypt, key, iv);
-            decrypt.Should().Be(text);
+            var encrypt = LIB.CryptoProvider.GetPasswordHash(cipherPassword);
+            encrypt.Should().NotBeNullOrWhiteSpace();
         }
 
         #endregion

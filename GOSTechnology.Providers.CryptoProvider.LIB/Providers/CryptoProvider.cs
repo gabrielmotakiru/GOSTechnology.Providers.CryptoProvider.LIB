@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +8,8 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
     /// <summary>
     /// CryptoProvider.
     /// </summary>
-    public class CryptoProvider : ICryptoProvider
+    public static class CryptoProvider
     {
-        /// <summary>
-        /// _logger.
-        /// </summary>
-        private readonly ILogger<CryptoProvider> _logger;
-
-        /// <summary>
-        /// CryptoProvider.
-        /// </summary>
-        /// <param name="logger"></param>
-        public CryptoProvider(ILogger<CryptoProvider> logger)
-        {
-            this._logger = logger;
-        }
-
         /// <summary>
         /// EncryptAES.
         /// </summary>
@@ -32,43 +17,32 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
         /// <param name="key">Key for crypto in AES.</param>
         /// <param name="iv">Iv for crypto in AES.</param>
         /// <returns></returns>
-        public String EncryptAES(String text, String key, String iv)
+        public static String EncryptAES(String text, String key, String iv)
         {
             String result = default(String);
 
-            try
+            if (String.IsNullOrWhiteSpace(text))
             {
-                result = CryptoExtension.EncryptAES(text, key, iv);
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_TEXT, ConstantsCryptoProvider.MESSAGE_TEXT_ARGUMENT_NULL);
             }
-            catch (Exception ex)
+            else if (String.IsNullOrWhiteSpace(key))
             {
-                this._logger.LogError(ex?.ToString());
-                throw ex;
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_KEY, ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_NULL);
+            }
+            else if (String.IsNullOrWhiteSpace(iv))
+            {
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_IV, ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_NULL);
+            }
+            else if (32 < key?.Length)
+            {
+                throw new ArgumentOutOfRangeException(ConstantsCryptoProvider.PARAM_KEY, ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_OUT_OF_RANGE);
+            }
+            else if (16 < iv?.Length)
+            {
+                throw new ArgumentOutOfRangeException(ConstantsCryptoProvider.PARAM_IV, ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_OUT_OF_RANGE);
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// EncryptAESAsync.
-        /// </summary>
-        /// <param name="text">Text for crypto in AES.</param>
-        /// <param name="key">Key for crypto in AES.</param>
-        /// <param name="iv">Iv for crypto in AES.</param>
-        /// <returns></returns>
-        public async Task<String> EncryptAESAsync(String text, String key, String iv)
-        {
-            String result = default(String);
-
-            try
-            {
-                await Task.Run(() => { result = CryptoExtension.EncryptAES(text, key, iv); });
-            }
-            catch (Exception ex)
-            {
-                this._logger.LogError(ex?.ToString());
-                throw ex;
-            }
+            result = CryptoExtension.EncryptAES(text, key, iv);
 
             return result;
         }
@@ -80,43 +54,70 @@ namespace GOSTechnology.Providers.CryptoProvider.LIB
         /// <param name="key">Key for decrypto in AES.</param>
         /// <param name="iv">Iv for decrypto in AES.</param>
         /// <returns></returns>
-        public String DecryptAES(String cipherText, String key, String iv)
+        public static String DecryptAES(String cipherText, String key, String iv)
         {
             String result = default(String);
 
-            try
+            if (String.IsNullOrWhiteSpace(cipherText))
             {
-                result = CryptoExtension.DecryptAES(cipherText, key, iv);
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_CIPHER_TEXT, ConstantsCryptoProvider.MESSAGE_CIPHER_TEXT_ARGUMENT_NULL);
             }
-            catch (Exception ex)
+            else if (String.IsNullOrWhiteSpace(key))
             {
-                this._logger.LogError(ex?.ToString());
-                throw ex;
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_KEY, ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_NULL);
             }
+            else if (String.IsNullOrWhiteSpace(iv))
+            {
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_IV, ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_NULL);
+            }
+            else if (32 < key?.Length)
+            {
+                throw new ArgumentOutOfRangeException(ConstantsCryptoProvider.PARAM_KEY, ConstantsCryptoProvider.MESSAGE_KEY_ARGUMENT_OUT_OF_RANGE);
+            }
+            else if (16 < iv?.Length)
+            {
+                throw new ArgumentOutOfRangeException(ConstantsCryptoProvider.PARAM_IV, ConstantsCryptoProvider.MESSAGE_IV_ARGUMENT_OUT_OF_RANGE);
+            }
+
+            result = CryptoExtension.DecryptAES(cipherText, key, iv);
 
             return result;
         }
 
         /// <summary>
-        /// DecryptAESAsync.
+        /// SetPasswordHash.
         /// </summary>
-        /// <param name="cipherText">Text for decrypto in AES.</param>
-        /// <param name="key">Key for decrypto in AES.</param>
-        /// <param name="iv">Iv for decrypto in AES.</param>
+        /// <param name="password">Password for crypto in AES.</param>
         /// <returns></returns>
-        public async Task<String> DecryptAESAsync(String cipherText, String key, String iv)
+        public static String SetPasswordHash(String password)
         {
             String result = default(String);
 
-            try
+            if (String.IsNullOrWhiteSpace(password))
             {
-                await Task.Run(() => { result = CryptoExtension.DecryptAES(cipherText, key, iv); });
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_PASSWORD, ConstantsCryptoProvider.MESSAGE_PASSWORD_ARGUMENT_NULL);
             }
-            catch (Exception ex)
+
+            result = CryptoExtension.EncryptAES(password, ConstantsCryptoProvider.KEY_PASSWORD, ConstantsCryptoProvider.IV_PASSWORD);
+
+            return result;
+        }
+
+        /// <summary>
+        /// GetPasswordHash.
+        /// </summary>
+        /// <param name="cipherPassword ">Cipher password for decrypto in AES.</param>
+        /// <returns></returns>
+        public static String GetPasswordHash(String cipherPassword)
+        {
+            String result = default(String);
+
+            if (String.IsNullOrWhiteSpace(cipherPassword))
             {
-                this._logger.LogError(ex?.ToString());
-                throw ex;
+                throw new ArgumentNullException(ConstantsCryptoProvider.PARAM_CIPHER_PASSWORD, ConstantsCryptoProvider.MESSAGE_CIPHER_PASSWORD_ARGUMENT_NULL);
             }
+
+            result = CryptoExtension.DecryptAES(cipherPassword, ConstantsCryptoProvider.KEY_PASSWORD, ConstantsCryptoProvider.IV_PASSWORD);
 
             return result;
         }

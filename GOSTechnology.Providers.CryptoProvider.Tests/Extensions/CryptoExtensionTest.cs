@@ -11,7 +11,7 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
     [TestFixture]
     public class CryptoExtensionTest
     {
-        #region "TESTS"
+        #region "ENCRYPT TESTS"
 
         /// <summary>
         /// ShouldFailEncryptAES.
@@ -20,13 +20,13 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.NULL, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         [TestCase(ConstantsCryptoProvider.TEST_2, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
         [TestCase(ConstantsCryptoProvider.TEST_3, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
         public void ShouldFailEncryptAES(String text, String key, String iv)
         {
-            var encrypt = CryptoExtension.EncryptAES(text, key, iv);
-            encrypt.Should().BeNullOrWhiteSpace();
+            Action comparison = () => CryptoExtension.EncryptAES(text, key, iv);
+            comparison.Should().Throw<Exception>();
         }
 
         /// <summary>
@@ -45,6 +45,10 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
             encrypt.Should().NotBeNullOrWhiteSpace();
         }
 
+        #endregion
+
+        #region "DECRYPT TESTS"
+
         /// <summary>
         /// ShouldFailDecryptAES.
         /// </summary>
@@ -52,13 +56,13 @@ namespace GOSTechnology.Providers.CryptoProvider.Tests
         /// <param name="key"></param>
         /// <param name="iv"></param>
         [Test]
-        [TestCase(ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
+        [TestCase(ConstantsCryptoProvider.NULL, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.IV_DEFAULT)]
         [TestCase(ConstantsCryptoProvider.TEST_2_CRYPTO, ConstantsCryptoProvider.EMPTY, ConstantsCryptoProvider.IV_DEFAULT)]
         [TestCase(ConstantsCryptoProvider.TEST_3_CRYPTO, ConstantsCryptoProvider.KEY_DEFAULT, ConstantsCryptoProvider.EMPTY)]
         public void ShouldFailDecryptAES(String cipherText, String key, String iv)
         {
-            var decrypt = CryptoExtension.DecryptAES(cipherText, key, iv);
-            decrypt.Should().BeNullOrWhiteSpace();
+            Action comparison = () => CryptoExtension.DecryptAES(cipherText, key, iv);
+            comparison.Should().Throw<Exception>();
         }
 
         /// <summary>
