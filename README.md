@@ -1,6 +1,6 @@
 # GOSTechnology.Providers.CryptoProvider.LIB
 ## Crypto management provider in AES with key 256 bits and block (iv) 128 bits.
-#### *Version Note: 1.0.1-preview3.*
+#### *Version Note: 1.0.1.*
 
 [![N|Solid](https://raw.githubusercontent.com/gabrielmotakiru/GOSTechnology.Providers.CryptoProvider.LIB/main/GOSTechnology.Providers.CryptoProvider.LIB/icon.png)](https://github.com/gabrielmotakiru/GOSTechnology.Providers.CryptoProvider.LIB)
 
