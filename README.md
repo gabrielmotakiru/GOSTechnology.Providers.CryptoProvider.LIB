@@ -49,10 +49,10 @@
 
 ---
 
-#### **Note**: CryptoProvider uses key until 256 bits and block size until 128 bits based in AES.
-#### **Note**: The calls can be have by static call in the public class CryptoProvider, of namespace "GOSTechnology.Providers.CryptoProvider.LIB".
-#### **Note**: Exists a scheme of method wich provide hash for passwords, with encrypt and decrypt.
-#### **Note**: The key and block size are boarded into library.
+**Note**: CryptoProvider uses key until 256 bits and block size until 128 bits based in AES.
+**Note**: The calls can be have by static call in the public class CryptoProvider, of namespace "GOSTechnology.Providers.CryptoProvider.LIB".
+**Note**: Exists a scheme of method wich provide hash for passwords, with encrypt and decrypt.
+**Note**: The key and block size are boarded into library.
 
 ---
 
